@@ -6,19 +6,38 @@ class Squere extends StatelessWidget {
   final bool isWhite;
 
   final ChassPiece? piece;
+  final bool isSelected;
+  final void Function()? onTap;
 
-  const Squere({super.key, required this.isWhite, required this.piece});
+  const Squere({
+    super.key,
+    required this.isWhite,
+    required this.piece,
+    required this.isSelected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: isWhite ? foregraudColor : backgroudColor,
-      child: piece != null
-          ? Image.asset(
-              piece!.imagePath,
-              color: piece!.isWhite ? Colors.white : Colors.black,
-            )
-          : null,
+    Color? squareColor;
+
+    if (isSelected) {
+      squareColor = Colors.green;
+    } else {
+      squareColor = isWhite ? foregraudColor : backgroudColor;
+    }
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: squareColor,
+        child: piece != null
+            ? Image.asset(
+                piece!.imagePath,
+                color: piece!.isWhite ? Colors.white : Colors.black,
+              )
+            : null,
+      ),
     );
   }
 }

@@ -1,4 +1,4 @@
-enum ChassPieceType { pawn, hook, knight, bishop, queen, king }
+enum ChassPieceType { pawn, rook, knight, bishop, queen, king }
 
 class ChassPiece {
   final ChassPieceType type;
