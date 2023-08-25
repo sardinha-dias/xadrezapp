@@ -7,6 +7,7 @@ class Squere extends StatelessWidget {
 
   final ChassPiece? piece;
   final bool isSelected;
+  final bool isValidMove;
   final void Function()? onTap;
 
   const Squere({
@@ -14,6 +15,7 @@ class Squere extends StatelessWidget {
     required this.isWhite,
     required this.piece,
     required this.isSelected,
+    required this.isValidMove,
     required this.onTap,
   });
 
@@ -23,6 +25,8 @@ class Squere extends StatelessWidget {
 
     if (isSelected) {
       squareColor = Colors.green;
+    } else if (isValidMove) {
+      squareColor = Colors.green[200];
     } else {
       squareColor = isWhite ? foregraudColor : backgroudColor;
     }

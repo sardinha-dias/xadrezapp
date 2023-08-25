@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xadrezapp/components/piece.dart';
-import 'package:xadrezapp/components/piece.dart';
 import 'package:xadrezapp/components/squere.dart';
 import 'package:xadrezapp/values/colors.dart';
-
-import 'components/piece.dart';
 import 'helper/helper_method.dart';
 
 class GameBoard extends StatefulWidget {
@@ -30,14 +27,55 @@ class _GameBoardState extends State<GameBoard> {
     _initializeBord();
   }
 
+// list of valid movies for the currently selected
+
+  List<List<int>> validMoves = [];
+
   void pieceSelected(int row, int col) {
     setState(() {
       if (board[row][col] != null) {
         selectedPiece = board[row][col];
-        selectedCol = col;
         selectedRow = row;
+        selectedCol = col;
       }
+
+      validMoves =
+          calculateRowValidMoves(selectedRow, selectedCol, selectedPiece);
     });
+  }
+
+  List<List<int>> calculateRowValidMoves(int row, int col, ChassPiece? piece) {
+    List<List<int>> candidateMovias = [];
+    int direction = piece!.isWhite ? -1 : 1;
+
+    switch (piece.type) {
+      case ChassPieceType.pawn:
+        if (isinInTheBoard(row + direction, col) &&
+            board[row + direction][col] == null) {
+          candidateMovias.add([row + direction, col]);
+        }
+        if ((row == 1 && !piece.isWhite) || (row == 6 && piece.isWhite)) {
+          if (isinInTheBoard(row + 2, col) &&
+              board[row + 2 * direction][col] == null &&
+              board[row + direction][col] == null) {
+            candidateMovias.add([row + 2 * direction, col]);
+          }
+        }
+
+      //// if (isinInTheBoard(row + direction, col - 1) &&
+      // board[row + direction][col - 1] != null &&
+      case ChassPieceType.rook:
+        break;
+      case ChassPieceType.knight:
+        break;
+      case ChassPieceType.bishop:
+        break;
+      case ChassPieceType.queen:
+        break;
+      case ChassPieceType.king:
+        break;
+    }
+    return candidateMovias;
   }
 
   void _initializeBord() {
@@ -146,11 +184,6 @@ class _GameBoardState extends State<GameBoard> {
     board = newBoard;
   }
 
-//  ChassPiece myPawn = ChassPiece(
-  //     type: ChassPieceType.blackPeon,
-  //     isWhite: false,
-  //     imagePath: 'lib/images/whitePawn.png');
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -164,10 +197,20 @@ class _GameBoardState extends State<GameBoard> {
           int row = index ~/ 8;
           int col = index % 8;
           bool isSelected = selectedRow == row && selectedCol == col;
+
+          bool isValidMove = false;
+
+          for (var position in validMoves) {
+            if (position[0] == row && position[1] == col) {
+              isValidMove = true;
+            }
+          }
+
           return Squere(
             isWhite: isWhite(index),
             piece: board[row][col],
             isSelected: isSelected,
+            isValidMove: isValidMove,
             onTap: () => pieceSelected(row, col),
           );
         },
